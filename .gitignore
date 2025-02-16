@@ -1,6 +1,10 @@
 # Ignore the virtual environment folder
 venv/
 
+# Ignore the dataset folder
+coco/
+pycocoDemo.ipynb
+
 # Ignore Python cache files
 __pycache__/
 *.pyc
