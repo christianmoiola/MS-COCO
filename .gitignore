@@ -1,6 +1,9 @@
 # Ignore the virtual environment folder
 venv/
 
+# Ignore the model folder
+models/
+
 # Ignore the dataset folder
 coco/
 pycocoDemo.ipynb
