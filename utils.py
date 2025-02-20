@@ -1,19 +1,17 @@
-import torch
-import torch.utils.data as data
-from pycocotools.coco import COCO
 import os
+import torch
 from PIL import Image
 from tqdm import tqdm
+import torch.utils.data as data
+from pycocotools.coco import COCO
+from torch.utils.data import default_collate
 
+from config import *
 
-def load_coco(path):
-    '''
-        input: path/to/data
-        output: coco instance
-    '''
-    return COCO(path)
+def load_coco():
+    return COCO(PATH_ANNOTATIONS)
 
-def create_coco_dataset(coco, path_images):
+def create_coco_dataset(coco):
     imgs = coco.loadImgs(coco.getImgIds())
 
     dict_idcat_supercat = {}
@@ -27,7 +25,7 @@ def create_coco_dataset(coco, path_images):
 
     for img in tqdm(imgs, desc="Extraction dataset"):
         anns = coco.loadAnns(coco.getAnnIds(imgIds=img["id"]))
-        original_image = Image.open(os.path.join(path_images, img["file_name"]))
+        original_image = Image.open(os.path.join(PATH_IMAGES, img["file_name"]))
         for ann in anns:
             idcat = ann['category_id']
             bbox = ann['bbox']
@@ -56,7 +54,7 @@ class Lang():
         return vocab
 
 class Ms_Coco(data.Dataset):
-    def __init__(self, dataset, lang, processor, template="A photo of a {}"):
+    def __init__(self, dataset, lang, processor):
         self.lang = lang
         self.processor = processor
 
@@ -69,7 +67,7 @@ class Ms_Coco(data.Dataset):
             self.categories.append(lang.category2id[el['category']])
             self.supercategories.append(lang.superCategory2id[el['supercategory']])
         
-        self.text = [template.format(cat) for cat in lang.category]
+        self.text = [TEMPLATE.format(cat) for cat in lang.category]
         
     def __len__(self):
         return len(self.images)
@@ -80,8 +78,26 @@ class Ms_Coco(data.Dataset):
         image = self.images[idx]
         processed_image = self.processor(text=self.text, images=image, return_tensors="pt", padding=True)
 
-        return {"input_ids": processed_image["input_ids"],
-                "attention_mask": processed_image["attention_mask"],
-                "pixel_values": processed_image["pixel_values"],
-                "category": torch.tensor(category),
-                "supercategory": torch.tensor(supercategory)}
+        return {"input_ids": processed_image["input_ids"].to(DEVICE),
+                "attention_mask": processed_image["attention_mask"].to(DEVICE),
+                "pixel_values": processed_image["pixel_values"][0].to(DEVICE),
+                "category": torch.tensor(category).to(DEVICE),
+                "supercategory": torch.tensor(supercategory).to(DEVICE)}
+    
+
+def collate_fn(data):
+    new_item = {}
+    input_ids = data[0]["input_ids"]
+    attention_mask = data[0]["attention_mask"]
+    data = default_collate(data)
+
+    pixel_values = data["pixel_values"]
+    category = data["category"]
+    supercategory = data["supercategory"]
+
+    new_item["input_ids"] = input_ids
+    new_item["attention_mask"] = attention_mask
+    new_item["pixel_values"] = pixel_values
+    new_item["category"] = category
+    new_item["supercategory"] = supercategory
+    return new_item
