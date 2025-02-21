@@ -8,7 +8,6 @@ from model import ClipModel
 
 
 
-
 if __name__ == "__main__":
     coco=load_coco()
 
@@ -22,7 +21,7 @@ if __name__ == "__main__":
     processor = CLIPProcessor.from_pretrained(CLIP, cache_dir=PATH_MODELS)
     dataset = Ms_Coco(raw_dataset, lang, processor)
 
-    dataloader = DataLoader(dataset, batch_size=64,  shuffle=True, collate_fn=collate_fn)
+    dataloader = DataLoader(dataset, batch_size=4,  shuffle=False, collate_fn=collate_fn)
 
     clip = ClipModel()
 
