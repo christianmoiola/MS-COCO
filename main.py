@@ -9,9 +9,12 @@ from model import ClipModel
 
 
 if __name__ == "__main__":
+    torch.manual_seed(1234)
+
     coco=load_coco()
 
     raw_dataset = create_coco_dataset(coco=coco)
+    #raw_dataset = raw_dataset[3870:3890]
 
     category = set([d['category'] for d in raw_dataset])
     superCategory = set([d['supercategory'] for d in raw_dataset])
@@ -20,8 +23,8 @@ if __name__ == "__main__":
 
     processor = CLIPProcessor.from_pretrained(CLIP, cache_dir=PATH_MODELS)
     dataset = Ms_Coco(raw_dataset, lang, processor)
-
-    dataloader = DataLoader(dataset, batch_size=4,  shuffle=False, collate_fn=collate_fn)
+    
+    dataloader = DataLoader(dataset, batch_size=2,  shuffle=True, collate_fn=collate_fn)
 
     clip = ClipModel()
 

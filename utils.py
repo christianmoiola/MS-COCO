@@ -29,8 +29,8 @@ def create_coco_dataset(coco):
         for ann in anns:
             idcat = ann['category_id']
             bbox = ann['bbox']
-            if bbox[2] < 150 or bbox[3] < 150:      #! To remove small images
-                continue                            #! To remove small images
+            if bbox[2] < 1 or bbox[3] < 1:      #! To remove small images
+                continue                        #! To remove small images
             image_cropped = original_image.crop((bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3]))
             dataset.append({
                 'image': image_cropped,

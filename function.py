@@ -1,4 +1,5 @@
 import torch
+from torcheval.metrics import MulticlassF1Score
 from tqdm import tqdm
 
 from config import DEVICE
@@ -7,6 +8,10 @@ def eval(model, data, lang):
     #model.eval()
     
     with torch.no_grad():
+        print("Len ", len(lang.category))
+
+        f1_metric = MulticlassF1Score(num_classes=len(lang.category), average='macro').to(DEVICE)
+
         with torch.autocast(DEVICE):
             pbar = tqdm(data)
             correctly_classified = 0
@@ -17,13 +22,16 @@ def eval(model, data, lang):
                 probs = logits_per_image.softmax(dim=1)  # we can take the softmax to get the label probabilities
                 predicted_labels = probs.argmax(dim=1)  # the label with the highest probability is our prediction
                 ground_truth = sample['category']
-                # print(f"Probs: {probs}")
-                # print(f"Predicted labels: {predicted_labels}, Ground truth: {ground_truth}")
+
+                # Accuracy
                 correctly_classified += (predicted_labels == ground_truth).sum().item()
-                # print(f"Correctly classified: {correctly_classified}")
                 total += predicted_labels.size(0)
-                # print(f"Total: {total}")
-                pbar.set_description(f"Accuracy: {correctly_classified/total}")
+
+                # F1 Score
+                f1_metric.update(predicted_labels, ground_truth)
+                #current_f1 = f1_metric.compute().item()
+
+                pbar.set_description(f"Acc:{correctly_classified/total}")
 
 
 
