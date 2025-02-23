@@ -1,6 +1,6 @@
 import os
 import torch
-from PIL import Image
+from PIL import Image, ImageDraw
 from tqdm import tqdm
 import torch.utils.data as data
 from pycocotools.coco import COCO
@@ -28,16 +28,26 @@ def create_coco_dataset(coco):
         original_image = Image.open(os.path.join(PATH_IMAGES, img["file_name"]))
         for ann in anns:
             idcat = ann['category_id']
-            bbox = ann['bbox']
-            if bbox[2] < 1 or bbox[3] < 1:      #! To remove small images
-                continue                        #! To remove small images
-            image_cropped = original_image.crop((bbox[0], bbox[1], bbox[0]+bbox[2], bbox[1]+bbox[3]))
+            x, y, w, h = ann['bbox']
+
+            if THRESHOLD_BBOX is not None:
+                if w < THRESHOLD_BBOX or h < THRESHOLD_BBOX:
+                    continue
+
+            if EXTRACTION_BBOX =="crop":
+                processed_image = original_image.crop((x, y, x + w, y + h))
+            elif EXTRACTION_BBOX == "draw_rectangle":
+                processed_image = original_image.copy()
+                draw = ImageDraw.Draw(processed_image)
+                draw.rectangle([x, y, x + w, y + h], outline="red")
+            else:
+                raise ValueError(f"Extraction method not supported: {EXTRACTION_BBOX}")
+
             dataset.append({
-                'image': image_cropped,
+                'image': processed_image,
                 'category': dict_id_cat[idcat],
                 'supercategory': dict_idcat_supercat[idcat]
             })
-
     return dataset
 
 class Lang():
@@ -69,8 +79,13 @@ class Ms_Coco(data.Dataset):
             self.categories.append(lang.category2id[el['category']])
             self.supercategories.append(lang.superCategory2id[el['supercategory']])
         
-        self.text = [TEMPLATE.format(cat) for cat in lang.category]
-        
+        if LABEL == "category":
+            self.text = [TEMPLATE.format(cat) for cat in lang.category]
+        elif LABEL == "supercategory":
+            self.text = [TEMPLATE.format(cat) for cat in lang.superCategory]
+        else:
+            raise ValueError(f"Label not supported: {LABEL}")
+
     def __len__(self):
         return len(self.images)
     

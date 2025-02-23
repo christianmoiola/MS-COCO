@@ -1,12 +1,12 @@
 import torch.nn as nn
 from transformers import CLIPModel
 
-from config import PATH_MODELS, DEVICE
+from config import PATH_MODELS, DEVICE, CLIP
 
 class ClipModel(nn.Module):
     def __init__(self):
         super(ClipModel, self).__init__()
-        self.clip = CLIPModel.from_pretrained("openai/clip-vit-large-patch14-336", cache_dir=PATH_MODELS, device_map=DEVICE)
+        self.clip = CLIPModel.from_pretrained(CLIP, cache_dir=PATH_MODELS, device_map=DEVICE)
 
     def forward(self, input_ids, attention_mask, pixel_values):
         
