@@ -1,0 +1,97 @@
+CONFIG
+DEVICE: cuda
+CLIP: openai/clip-vit-large-patch14-336
+LABEL: category
+TEMPLATE: A photo of a {}
+EXTRACTION_BBOX: crop
+THRESHOLD_BBOX: 100
+
+CLASSIFICATION REPORT
+                precision    recall  f1-score   support
+
+    hair drier       0.04      1.00      0.08         3
+          bird       0.85      0.88      0.87        69
+         couch       0.74      0.55      0.63       186
+          boat       0.89      0.88      0.89        58
+          sink       0.82      0.80      0.81        50
+         chair       0.86      0.43      0.57       319
+           cup       0.78      0.41      0.54        95
+       frisbee       0.09      1.00      0.16         9
+ parking meter       0.41      0.89      0.56        18
+      sandwich       0.55      0.86      0.67       108
+         train       0.95      0.92      0.93       154
+         spoon       0.34      0.38      0.36        29
+        orange       0.58      0.88      0.70        73
+     snowboard       0.05      0.75      0.09         4
+    teddy bear       0.70      0.90      0.79       106
+          cake       0.39      0.93      0.55       101
+         bench       0.71      0.58      0.63       125
+         mouse       0.25      0.50      0.33         8
+    wine glass       0.29      0.85      0.44        33
+          bear       0.91      0.94      0.92        51
+         zebra       0.94      1.00      0.97       143
+        carrot       0.59      0.73      0.65        51
+       giraffe       0.97      0.99      0.98       141
+           bus       0.87      0.89      0.88       156
+           cow       0.88      0.97      0.92       102
+  potted plant       0.75      0.60      0.67        65
+      elephant       0.85      1.00      0.92       136
+          oven       0.64      0.78      0.70        81
+       hot dog       0.40      0.69      0.50        51
+baseball glove       0.07      1.00      0.13         6
+        banana       0.67      0.94      0.78        80
+        remote       0.12      0.93      0.21        14
+        person       0.93      0.26      0.40      2870
+      airplane       0.97      0.97      0.97        77
+  refrigerator       0.73      0.84      0.78        76
+  fire hydrant       0.56      0.94      0.70        36
+           cat       0.66      0.81      0.73       165
+         donut       0.57      0.94      0.71        71
+      broccoli       0.72      0.83      0.77        87
+        toilet       0.91      0.86      0.88       125
+      scissors       0.60      0.90      0.72        20
+           bed       0.73      0.63      0.68       145
+       handbag       0.21      0.50      0.30        36
+     surfboard       0.28      0.94      0.44        34
+          fork       0.44      0.69      0.54        36
+ traffic light       0.59      0.93      0.72        14
+    motorcycle       0.67      0.99      0.80       159
+ tennis racket       0.13      1.00      0.23        34
+     stop sign       0.90      1.00      0.95        26
+    skateboard       0.22      0.97      0.36        36
+  dining table       0.48      0.38      0.42       413
+         horse       0.76      0.96      0.85       128
+         pizza       0.53      0.92      0.68       142
+         sheep       0.89      0.97      0.93       112
+           tie       0.15      0.85      0.26        20
+    toothbrush       0.21      1.00      0.34         7
+         clock       0.92      0.94      0.93        47
+        bottle       0.64      0.76      0.70        50
+           car       0.88      0.61      0.72       168
+          kite       0.47      1.00      0.64        41
+      backpack       0.19      0.76      0.30        34
+      suitcase       0.70      0.86      0.77        72
+    cell phone       0.20      0.83      0.33        35
+          skis       0.19      0.89      0.31        18
+  baseball bat       0.09      0.89      0.17        18
+     microwave       0.47      1.00      0.64        15
+         truck       0.85      0.63      0.72       122
+         apple       0.54      0.83      0.65        41
+          bowl       0.55      0.31      0.40       186
+          book       0.73      0.61      0.66        66
+           dog       0.72      0.73      0.72       143
+            tv       0.84      0.56      0.67       134
+      keyboard       0.54      0.78      0.64        40
+   sports ball       0.06      0.71      0.12         7
+      umbrella       0.68      0.96      0.79       112
+       bicycle       0.66      0.95      0.78        65
+       toaster       0.25      1.00      0.40         2
+        laptop       0.57      0.82      0.67       138
+         knife       0.50      0.46      0.48        26
+          vase       0.53      0.72      0.61        43
+
+      accuracy                           0.60      9117
+     macro avg       0.57      0.81      0.61      9117
+  weighted avg       0.76      0.60      0.60      9117
+
+END CLASSIFICATION REPORT

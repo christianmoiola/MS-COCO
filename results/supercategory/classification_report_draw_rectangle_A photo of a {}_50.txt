@@ -1,0 +1,29 @@
+CONFIG
+DEVICE: cuda
+CLIP: openai/clip-vit-large-patch14-336
+LABEL: supercategory
+TEMPLATE: A photo of a {}
+EXTRACTION_BBOX: draw_rectangle
+THRESHOLD_BBOX: 50
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   support
+
+   accessory       0.21      0.40      0.28       706
+  electronic       0.36      0.23      0.28       637
+      indoor       0.08      0.33      0.13       542
+      animal       0.86      0.66      0.75      1729
+     outdoor       0.11      0.62      0.19       378
+      person       0.72      0.27      0.39      5092
+     kitchen       0.19      0.09      0.12      1151
+   furniture       0.69      0.23      0.35      2089
+   appliance       0.51      0.36      0.42       379
+     vehicle       0.75      0.56      0.64      1619
+        food       0.44      0.74      0.55      1543
+      sports       0.17      0.52      0.26       592
+
+    accuracy                           0.39     16457
+   macro avg       0.42      0.42      0.36     16457
+weighted avg       0.57      0.39      0.42     16457
+
+END CLASSIFICATION REPORT

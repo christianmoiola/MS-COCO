@@ -1,18 +1,16 @@
 import torch
 from tqdm import tqdm
-from torcheval.metrics import MulticlassF1Score
+from sklearn.metrics import classification_report
 
 
 from config import *
 
 def eval(model, data, lang):
-    #model.eval()
-    f1_metric = MulticlassF1Score(num_classes=len(lang.category), average='macro').to(DEVICE)
-
-    
+    all_preds = []
+    all_labels = []
     pbar = tqdm(data)
-    correctly_classified = 0
-    total = 0
+    pbar.set_description("Evaluation")
+
     for sample in pbar:
         with torch.no_grad():
             with torch.autocast(DEVICE):   
@@ -27,22 +25,12 @@ def eval(model, data, lang):
         elif LABEL == "supercategory":
             ground_truth = sample['supercategory']
 
-        # Accuracy
-        correctly_classified += (predicted_labels == ground_truth).sum().item()
-        total += predicted_labels.size(0)
+        all_preds.extend(predicted_labels.cpu().tolist())
+        all_labels.extend(ground_truth.cpu().tolist())
 
-        # F1 Score
-        f1_metric.update(predicted_labels, ground_truth)
-
-        pbar.set_description(f"Acc:{correctly_classified/total}")
-
-    txt = f"Model:{CLIP} Label:{LABEL}_Template:{TEMPLATE}_Extraction_bbox:{EXTRACTION_BBOX}_Threshold:{THRESHOLD_BBOX}_Acc:{correctly_classified/total}_F1:{f1_metric.compute()}"
-    with open("results.txt", "a") as f:
-        f.write(txt + "\n")
-
-    print(f"Analysis performance of {CLIP} on the MS COCO dataset with {LABEL} as label")
-    print(f"The template used is:{TEMPLATE}")
-    print(f"The method of extraction of the bounding box is {EXTRACTION_BBOX}")
-    if THRESHOLD_BBOX:
-        print(f"The threshold of the bounding box is {THRESHOLD_BBOX}")
-    print(f"Accuracy: {correctly_classified/total}, F1 Score: {f1_metric.compute()}")
+    if LABEL == "category":
+        target_names = lang.category
+    elif LABEL == "supercategory":
+        target_names = lang.superCategory
+    
+    return classification_report(all_labels, all_preds, target_names=target_names)

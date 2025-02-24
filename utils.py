@@ -118,3 +118,23 @@ def collate_fn(data):
     new_item["category"] = category
     new_item["supercategory"] = supercategory
     return new_item
+
+
+def save_classification_report(report):
+    if not os.path.exists(os.path.join(ROOT_DIR, "results")):
+        os.makedirs(os.path.join(ROOT_DIR, "results"))
+    if not os.path.exists(os.path.join(ROOT_DIR, f"results/{LABEL}")):
+        os.makedirs(os.path.join(ROOT_DIR, f"results/{LABEL}"))
+    with open(os.path.join(ROOT_DIR, f"results/{LABEL}/classification_report_{EXTRACTION_BBOX}_{TEMPLATE}_{THRESHOLD_BBOX}.txt"), "w") as f:
+        f.write(f"CONFIG\n")
+        f.write(f"DEVICE: {DEVICE}\n")
+        f.write(f"CLIP: {CLIP}\n")
+        f.write(f"LABEL: {LABEL}\n")
+        f.write(f"TEMPLATE: {TEMPLATE}\n")
+        f.write(f"EXTRACTION_BBOX: {EXTRACTION_BBOX}\n")
+        f.write(f"THRESHOLD_BBOX: {THRESHOLD_BBOX}\n")
+        f.write(f"\n")
+        f.write(f"CLASSIFICATION REPORT\n")
+        f.write(report)
+        f.write(f"\n")
+        f.write(f"END CLASSIFICATION REPORT\n")

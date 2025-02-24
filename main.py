@@ -27,6 +27,8 @@ if __name__ == "__main__":
 
     clip = ClipModel()
 
-    eval(clip, dataloader, lang)
+    report = eval(clip, dataloader, lang)
+
+    save_classification_report(report)
     
     

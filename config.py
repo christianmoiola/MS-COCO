@@ -16,5 +16,5 @@ CLIP = "openai/clip-vit-large-patch14-336"
 LABEL = "category" # POSSIBLE VALUES: "category" or "supercategory"
 TEMPLATE = "The element in the image surrounded by a rectangle is a {}" # "A photo of a {}"
 EXTRACTION_BBOX = "draw_rectangle" # POSSIBLE VALUES: "crop" or "draw_rectangle"
-THRESHOLD_BBOX = None # POSSIBLE VALUES: int or None
+THRESHOLD_BBOX = 300 # POSSIBLE VALUES: int or None
 # END SETTINGS
